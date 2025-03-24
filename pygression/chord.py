@@ -31,7 +31,7 @@ class Chord:
     # Add modifier
     def attach(self, new_modifier: Modifier):
         if not issubclass(type(new_modifier), Modifier):
-            raise TypeError(f"must be modifier, not {type(modifier).__name__}")
+            raise TypeError(f"must be modifier, not {type(new_modifier).__name__}")
         if not new_modifier._compatible_with_quality(self._quality):
             raise TypeError(f"cannot apply {type(new_modifier).__name__} to {type(self._quality).__name__}")
 

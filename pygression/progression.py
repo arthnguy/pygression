@@ -1,11 +1,11 @@
 # Basically a list specifically tailored to chord progressions
+from typing import List
 from copy import deepcopy
 from .chord import Chord
 from .roman import Roman
 from .romanchord import RomanChord
 from .note import Note
-from .consts import Letter, Accidental, Mode, ROMAN, AS_NOTATION
-from .utils import nth_letter_from
+from .consts import Accidental, Mode
 from .quality.triad import *
 
 class Progression:
@@ -15,7 +15,7 @@ class Progression:
         if type(relative_to) != Mode:
             raise TypeError(f"relative_to must be mode, not {type(relative_to).__name__}")
         if items != None and type(items) != list:
-            raise TypeError(f"items must be list, not {type(chords).__name__}")
+            raise TypeError(f"items must be list, not {type(items).__name__}")
             
         self._mode = mode
         self._relative_to = relative_to
@@ -25,7 +25,7 @@ class Progression:
             self.append(item)
 
     # Get notes for scale in the specified mode
-    def _calculate_scale(self, mode: Mode) -> [Note]:
+    def _calculate_scale(self, mode: Mode) -> List[Note]:
         scale = []
         for i in range(7):
             scale.append(self._key >> i)
@@ -56,7 +56,7 @@ class Progression:
         self._chords += prog._chords
         return self
 
-    def __getitem__(self, index: int):
+    def __getitem__(self, index: int) -> Chord:
         if index >= len(self._chords) or index < -len(self._chords):
             raise IndexError("progression index out of range")
 
@@ -69,25 +69,25 @@ class Progression:
         self._chords[index] = new_chord
     
     @property
-    def mode(self):
+    def mode(self) -> Mode:
         return self._mode
     
     # Mode change
     @mode.setter
     def mode(self, new_mode: Mode):
         if type(new_mode) != Mode:
-            raise TypeError(f"must be mode, not {type(degree).__name__}")
+            raise TypeError(f"must be mode, not {type(new_mode).__name__}")
 
         self._mode = new_mode
     
     @property
-    def relative_to(self):
+    def relative_to(self) -> Mode:
         return self._relative_to
     
     @relative_to.setter
     def relative_to(self, new_mode: Mode):
         if type(new_mode) != Mode:
-            raise TypeError(f"must be mode, not {type(degree).__name__}")
+            raise TypeError(f"must be mode, not {type(new_mode).__name__}")
 
         for chord in self._chords:
             chord.roman += new_mode - self._relative_to
@@ -98,7 +98,7 @@ class Progression:
         self._relative_to = new_mode
     
     @property
-    def chords(self):
+    def chords(self) -> List[Chord]:
         return self._chords
     
     def _append_degree(self, degree: int):
@@ -176,7 +176,7 @@ class Progression:
     def pop(self, index: int=-1) -> Chord:
         return self._chords.pop(index)
     
-    def chords_in(self, key: Note) -> [Chord]:
+    def chords_in(self, key: Note) -> List[Chord]:
         if key.accidental.value < -1 or key.accidental.value > 1:
             raise ValueError("cannot have double accidentals as key")
 
