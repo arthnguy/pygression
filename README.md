@@ -13,9 +13,9 @@ python3 -m pip install pygression
 The `Note` class is mainly used to get a chord progression in a specific key. It is instantiated with a `Letter` and an optional `Accidental`.
 ```python
 >>> from pygression import Note, Letter, Accidental
->>> note = Note(Letter.A, accidental=Accidental.SHARP)
+>>> note = Note(Letter.A, accidental=Accidental.FLAT)
 >>> note
-A#
+Ab
 ```
 
 The `Roman` class is needed to create chord progressions that include any kind of chord. It is instantiated with a degree and an optional `Accidental`.
@@ -47,5 +47,5 @@ To get this progression in a specific key, use the `chords_in` method. This meth
 ```python
 >>> chords = axis.chords_in(note)
 >>> chords
-[A#, E#, Fxm, D#]
+[Ab, Eb, Fm, Db]
 ```
