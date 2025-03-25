@@ -91,4 +91,4 @@ class Note:
         if accidental > 2:
             accidental -= 12
 
-        return Note(letter, Accidental(accidental))
+        return Note(letter, Accidental(accidental + root.accidental.value))
