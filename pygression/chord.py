@@ -1,7 +1,6 @@
 # Comprised of a note, quality, and modifiers, they are the building blocks of progressions
 from copy import deepcopy
 from .note import Note
-from .consts import Letter, AS_NOTATION
 from .utils import nth_letter_from
 from .quality.base import Quality
 from .quality.triad import Major, Minor
@@ -160,8 +159,6 @@ class Chord:
         3. Apply inversion
         '''
         self._notes = self._quality.build_core(self._root)
-
-        add_begin = len(self._modifiers)
 
         for i in range(len(self._modifiers)):
             self._notes = self._modifiers[i].modify(self._root, self._notes)
