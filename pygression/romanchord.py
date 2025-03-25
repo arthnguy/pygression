@@ -18,7 +18,7 @@ class RomanChord:
         
         self._target = None
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         s = str(self._roman)
 
         if str(self._quality) in ("m", "o", "ø"):
@@ -28,7 +28,7 @@ class RomanChord:
 
         return s + self._quality.figured_bass(self._inversion) + "".join(str(modifier) for modifier in self._modifiers) + ("/" + str(self._target) if self._target != None else "")
 
-    def __str__(self):
+    def __str__(self) -> str:
         s = str(self._roman)
 
         if str(self._quality) in ("m", "o", "ø"):
@@ -39,7 +39,7 @@ class RomanChord:
         return s + self._quality.figured_bass(self._inversion) + "".join(str(modifier) for modifier in self._modifiers) + ("/" + str(self._target) if self._target != None else "")
     
     # Secondary chords
-    def __idiv__(self, target):
+    def __idiv__(self, target: "RomanChord") -> "RomanChord":
         if target._roman != Roman(1):
             self._target = target
         else:
@@ -47,7 +47,7 @@ class RomanChord:
 
         return self
     
-    def __truediv__(self, target):
+    def __truediv__(self, target: "RomanChord") -> "RomanChord":
         chord = deepcopy(self)
 
         if target._roman != Roman(1):
@@ -58,7 +58,7 @@ class RomanChord:
         return chord
     
     # Inversions
-    def __irshift__(self, inversions: int):
+    def __irshift__(self, inversions: int) -> "RomanChord":
         if type(inversions) != int:
             raise TypeError(f"must be int, not {type(inversions).__name__}")
 
@@ -73,7 +73,7 @@ class RomanChord:
         
         return self
 
-    def __rshift__(self, inversions: int):
+    def __rshift__(self, inversions: int) -> "RomanChord":
         if type(inversions) != int:
             raise TypeError(f"must be int, not {type(inversions).__name__}")
 
@@ -90,16 +90,16 @@ class RomanChord:
         
         return new_chord
     
-    def __ilshift__(self, inversions):
+    def __ilshift__(self, inversions: int) -> "RomanChord":
         return self.__irshift__(-inversions)
 
-    def __lshift__(self, inversions):
+    def __lshift__(self, inversions: int) -> "RomanChord":
         return self.__rshift__(-inversions)
     
     # Add modifier
-    def attach(self, new_modifier: Modifier):
+    def attach(self, new_modifier: Modifier) -> "RomanChord":
         if not issubclass(type(new_modifier), Modifier):
-            raise TypeError(f"must be modifier, not {type(modifier).__name__}")
+            raise TypeError(f"must be modifier, not {type(new_modifier).__name__}")
         if not new_modifier._compatible_with_quality(self._quality):
             raise TypeError(f"cannot apply {type(new_modifier).__name__} to {type(self._quality).__name__}")
 
@@ -110,11 +110,11 @@ class RomanChord:
         return self
 
     # Remove modifier
-    def detach(self, modifier):
+    def detach(self, modifier: Modifier) -> "RomanChord":
         self._modifiers.remove(modifier)
         return self
 
-    def with_mod(self, new_modifier: Modifier):
+    def with_mod(self, new_modifier: Modifier) -> "RomanChord":
         if not issubclass(type(new_modifier), Modifier):
             raise TypeError(f"must be modifier, not {type(new_modifier).__name__}")
         if not new_modifier._compatible_with_quality(self._quality):
@@ -128,7 +128,7 @@ class RomanChord:
 
         return new_chord            
 
-    def without_mod(self, modifier):
+    def without_mod(self, modifier: Modifier) -> "RomanChord":
         new_chord = deepcopy(self)
         new_chord._modifiers.remove(modifier)
 
@@ -139,14 +139,14 @@ class RomanChord:
         return self._roman
     
     @roman.setter
-    def roman(self, new_roman):
+    def roman(self, new_roman: Roman):
         if type(new_roman) != Roman:
-            raise TypeError(f"must be roman, not {type(new_quality).__name__}")
+            raise TypeError(f"must be roman, not {type(new_roman).__name__}")
         
         self._roman = new_roman
     
     @property
-    def target(self):
+    def target(self) -> "RomanChord":
         if self._target != None:
             return self._target
         else:
@@ -157,7 +157,7 @@ class RomanChord:
         return self._quality
     
     @quality.setter
-    def quality(self, new_quality):
+    def quality(self, new_quality: Quality):
         if not issubclass(type(new_quality), Quality):
             raise TypeError(f"must be quality, not {type(new_quality).__name__}")
 

@@ -40,29 +40,29 @@ class Progression:
         
         return scale
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self._chords)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self._chords)
 
-    def __add__(self, prog):
+    def __add__(self, prog: "Progression") -> "Progression":
         new_prog = deepcopy(self)
         new_prog._chords += prog._chords
 
         return new_prog
     
-    def __iadd__(self, prog):
+    def __iadd__(self, prog: "Progression") -> "Progression":
         self._chords += prog._chords
         return self
 
-    def __getitem__(self, index: int) -> Chord:
+    def __getitem__(self, index: int) -> RomanChord:
         if index >= len(self._chords) or index < -len(self._chords):
             raise IndexError("progression index out of range")
 
         return self._chords[index]
     
-    def __setitem__(self, index, new_chord):
+    def __setitem__(self, index: int, new_chord: RomanChord):
         if index >= len(self._chords) or index < -len(self._chords):
             raise IndexError("progression index out of range")
 
