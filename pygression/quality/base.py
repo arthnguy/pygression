@@ -1,4 +1,5 @@
 # Dictates how the chord is built
+from typing import List
 from abc import ABC, abstractmethod
 from ..note import Note
 from ..consts import Letter
@@ -12,7 +13,7 @@ class Quality(ABC):
     # Notes of the chord as integers
     @staticmethod
     @abstractmethod
-    def get_integers(self) -> [int]:
+    def get_integers(self) -> List[int]:
         pass
     
     # For Roman numeral analysis
@@ -20,7 +21,7 @@ class Quality(ABC):
     def figured_bass(self) -> str:
         pass
 
-    def build_core(self, root: Note) -> [Note]:
+    def build_core(self, root: Note) -> List[Note]:
         notes = []
         integers = self.get_integers()
 
