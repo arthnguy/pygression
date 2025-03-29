@@ -1,7 +1,8 @@
 <p align="center" width="100%">
     <img src="./icon.png" alt="icon" width="256"/>
 </p>
-# pygression
+
+# pygression [![Documentation Status](https://readthedocs.org/projects/pygression/badge/?version=latest)]
 
 ## Overview
 pygression is a Python package that adds the ability to represent chord progressions to your code.
