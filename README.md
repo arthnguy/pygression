@@ -21,31 +21,33 @@ Ab
 The `Roman` class is needed to create chord progressions that include any kind of chord. It is instantiated with a degree and an optional `Accidental`.
 ```python
 >>> from pygression import Roman
->>> roman = Roman(6)
+>>> roman = Roman(6, accidental=Accidental.FLAT)
 >>> roman
-VI
+bVI
 ```
 
 The `RomanChord` class represents chords in Roman numeral analysis. It is instantiated with a `Roman` object and an optional `Quality`.
 ```python
 >>> from pygression import RomanChord
 >>> from pygression.quality import triad
->>> rchord = RomanChord(roman, quality=triad.Minor())
+>>> rchord = RomanChord(roman, quality=triad.Major())
 >>> rchord
-vi
+bVI
 ```
 
-The `Progression` class represents chord progressions. Pass in a list of the degrees of the chords or `RomanChord`s in the progression.
+The `Progression` class represents chord progressions. Pass in a list of the degrees of the chords or `RomanChord`s in the progression with a mode and how the progression is viewed.
 ```python
->>> from pygression import Progression
->>> axis = Progression([1, 5, rchord, 4])
+>>> from pygression import Progression, Mode
+>>> axis = Progression([1, 5, rchord, 4], mode=Mode.AEO, relative_to=Mode.ION)
 >>> axis
-[I, V, vi, IV]
+[i, v, bVI, iv]
 ```
 
 To get this progression in a specific key, use the `chords_in` method. This method takes in a `Note` object.
 ```python
 >>> chords = axis.chords_in(note)
 >>> chords
-[Ab, Eb, Fm, Db]
+[Abm, Ebm, Fb, Dbm]
 ```
+
+More advanced features can be found in the documentation.
