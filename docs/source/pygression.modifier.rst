@@ -1,30 +1,22 @@
 pygression.modifier package
 ===========================
 
-pygression.modifier.add module
-------------------------------
-
-.. automodule:: pygression.modifier.add
-   :members:
-   :no-value:
-
-pygression.modifier.alter module
---------------------------------
-
-.. automodule:: pygression.modifier.alter
-   :members:
-   :no-value:
-
-pygression.modifier.no module
------------------------------
-
-.. automodule:: pygression.modifier.no
-   :members:
-   :no-value:
-
-pygression.modifier.sus module
+:py:mod:`Sus` module
 ------------------------------
 
 .. automodule:: pygression.modifier.sus
-   :members:
-   :no-value:
+
+:py:mod:`Add` module
+------------------------------
+
+.. automodule:: pygression.modifier.add
+
+:py:mod:`Alter` module
+--------------------------------
+
+.. automodule:: pygression.modifier.alter
+
+:py:mod:`No` module
+-----------------------------
+
+.. automodule:: pygression.modifier.no

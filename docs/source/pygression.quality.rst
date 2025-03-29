@@ -1,23 +1,21 @@
 pygression.quality package
 ==========================
 
-pygression.quality.extended module
-----------------------------------
-
-.. automodule:: pygression.quality.extended
-   :members:
-   :no-value:
-
-pygression.quality.seventh module
----------------------------------
-
-.. automodule:: pygression.quality.seventh
-   :members:
-   :no-value:
-
-pygression.quality.triad module
+:py:mod:`Triad` Module
 -------------------------------
 
 .. automodule:: pygression.quality.triad
    :members:
+   :undoc-members: False
+
+:py:mod:`Seventh` Module
+---------------------------------
+
+.. automodule:: pygression.quality.seventh
+   :no-value:
+
+:py:mod:`Extended` Module
+----------------------------------
+
+.. automodule:: pygression.quality.extended
    :no-value:
