@@ -1,4 +1,5 @@
 # pygression
+![pygression](./icon.png)
 
 ## Overview
 pygression is a Python package that adds the ability to represent chord progressions to your code.
