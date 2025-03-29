@@ -1,16 +1,19 @@
 from copy import deepcopy
 from .roman import Roman
 from .quality.base import Quality
-from .quality.triad import Major, Minor
+from .quality.triad import Major
 from .modifier.base import Modifier
 
 class RomanChord:
-    def __init__(self, roman: Roman, quality: Quality=Major()):
-        if type(roman) != Roman:
-            raise TypeError(f"roman must be roman, not {type(roman).__name__}")
-        if not issubclass(type(quality), Quality):
-            raise TypeError(f"quality must be quality, not {type(quality).__name__}")
+    """
+    Class that represents a chord in Roman numeral analysis.
 
+    Args:
+        roman (Roman): Roman numeral of the chord.
+        quality (Quality): Quality of the chord.
+    """
+
+    def __init__(self, roman: Roman, quality: Quality=Major()):
         self._roman = roman
         self._quality = quality
         self._inversion = 0
@@ -38,8 +41,17 @@ class RomanChord:
 
         return s + self._quality.figured_bass(self._inversion) + "".join(str(modifier) for modifier in self._modifiers) + ("/" + str(self._target) if self._target != None else "")
     
-    # Secondary chords
     def __idiv__(self, target: "RomanChord") -> "RomanChord":
+        """
+        Turns the chord into a secondary chord of the specified chord.
+
+        Args:
+            target (RomanChord): Chord to build current chord off of.
+        
+        Returns:
+            RomanChord: Secondary chord to target chord.
+        """
+
         if target._roman != Roman(1):
             self._target = target
         else:
@@ -48,6 +60,16 @@ class RomanChord:
         return self
     
     def __truediv__(self, target: "RomanChord") -> "RomanChord":
+        """
+        Returns a chord that is the secondary chord of the specified chord.
+
+        Args:
+            target (RomanChord): Chord to build current chord off of.
+        
+        Returns:
+            RomanChord: Secondary chord to target chord.
+        """
+
         chord = deepcopy(self)
 
         if target._roman != Roman(1):
@@ -57,12 +79,18 @@ class RomanChord:
         
         return chord
     
-    # Inversions
     def __irshift__(self, inversions: int) -> "RomanChord":
-        if type(inversions) != int:
-            raise TypeError(f"must be int, not {type(inversions).__name__}")
+        """
+        Inverts a chord up by a certain amount of inversions
 
-        highest_inversion = 3
+        Args:
+            inversions (int): Number of times to invert up.
+        
+        Returns:
+            RomanChord: The chord inverted.
+        """
+
+        highest_inversion = len(self.quality.get_integers())
         if len(self._modifiers) > 0 and str(self._modifiers[-1]) in ("no3", "no5"):
             highest_inversion -= 1
         if len(self._modifiers) > 1 and str(self._modifiers[-2]) in ("no3", "no5"):
@@ -74,12 +102,19 @@ class RomanChord:
         return self
 
     def __rshift__(self, inversions: int) -> "RomanChord":
-        if type(inversions) != int:
-            raise TypeError(f"must be int, not {type(inversions).__name__}")
+        """
+        Returns a chord inverted up a specified number of times.
+
+        Args:
+            inversions (int): Number of times to invert up.
+        
+        Returns:
+            RomanChord: A new inverted chord.
+        """
 
         new_chord = deepcopy(self)
         
-        highest_inversion = 3
+        highest_inversion = len(new_chord.quality.get_integers())
         if len(new_chord._modifiers) > 0 and str(new_chord._modifiers[-1]) in ("no3", "no5"):
             highest_inversion -= 1
         if len(new_chord._modifiers) > 1 and str(new_chord._modifiers[-2]) in ("no3", "no5"):
@@ -91,17 +126,41 @@ class RomanChord:
         return new_chord
     
     def __ilshift__(self, inversions: int) -> "RomanChord":
+        """
+        Inverts a chord down by a certain amount of inversions
+
+        Args:
+            inversions (int): Number of times to invert down.
+        
+        Returns:
+            RomanChord: The chord inverted.
+        """
+
         return self.__irshift__(-inversions)
 
     def __lshift__(self, inversions: int) -> "RomanChord":
+        """
+        Returns a chord inverted down a specified number of times.
+
+        Args:
+            inversions (int): Number of times to invert up.
+        
+        Returns:
+            RomanChord: A new inverted chord.
+        """
+
         return self.__rshift__(-inversions)
     
-    # Add modifier
     def attach(self, new_modifier: Modifier) -> "RomanChord":
-        if not issubclass(type(new_modifier), Modifier):
-            raise TypeError(f"must be modifier, not {type(new_modifier).__name__}")
-        if not new_modifier._compatible_with_quality(self._quality):
-            raise TypeError(f"cannot apply {type(new_modifier).__name__} to {type(self._quality).__name__}")
+        """
+        Adds a modifier to the Roman chord.
+
+        Args:
+            new_modifier: Modifier to add to the Roman chord.
+
+        Returns:
+            RomanChord: The Roman chord with the modifier added.
+        """
 
         if new_modifier not in self._modifiers:
             self._modifiers.append(new_modifier)
@@ -109,26 +168,49 @@ class RomanChord:
 
         return self
 
-    # Remove modifier
     def detach(self, modifier: Modifier) -> "RomanChord":
+        """
+        Removes a modifier from the Roman chord.
+
+        Args:
+            modifier: Modifier to remove from the Roman chord.
+
+        Returns:
+            RomanChord: The Roman chord with the modifier removed.
+        """
+
         self._modifiers.remove(modifier)
         return self
 
     def with_mod(self, new_modifier: Modifier) -> "RomanChord":
-        if not issubclass(type(new_modifier), Modifier):
-            raise TypeError(f"must be modifier, not {type(new_modifier).__name__}")
-        if not new_modifier._compatible_with_quality(self._quality):
-            raise TypeError(f"cannot apply {type(new_modifier).__name__} to {type(self._quality).__name__}")
+        """
+        Returns a Roman chord with the supplied modifier.
+
+        Args:
+            new_modifier: Modifier to add to the Roman chord.
+
+        Returns:
+            RomanChord: A new Roman chord with the modifier added.
+        """
         
         new_chord = deepcopy(self)
         if new_modifier not in new_chord._modifiers:
             new_chord._modifiers.append(new_modifier)
         new_chord._modifiers = sorted([modifier for modifier in new_chord._modifiers if new_modifier._compatible_with_mod(modifier)])
-        new_chord._calculate_notes()
 
         return new_chord            
 
     def without_mod(self, modifier: Modifier) -> "RomanChord":
+        """
+        Returns a Roman chord without the supplied modifier.
+
+        Args:
+            modifier: Modifier to remove from the Roman chord.
+
+        Returns:
+            RomanChord: The Roman chord with the modifier removed.
+        """
+
         new_chord = deepcopy(self)
         new_chord._modifiers.remove(modifier)
 
@@ -136,17 +218,35 @@ class RomanChord:
     
     @property
     def roman(self) -> Roman:
+        """
+        Get Roman numeral of the Roman chord.
+
+        Returns:
+            Roman: Roman numeral of the Roman chord.
+        """
+
         return self._roman
     
     @roman.setter
     def roman(self, new_roman: Roman):
-        if type(new_roman) != Roman:
-            raise TypeError(f"must be roman, not {type(new_roman).__name__}")
+        """
+        Set Roman numeral of the Roman chord.
+
+        Args:
+            new_roman (Roman): Roman numeral to set the Roman chord to.
+        """
         
         self._roman = new_roman
     
     @property
     def target(self) -> "RomanChord":
+        """
+        Get target of secondary chord.
+
+        Returns:
+            RomanChord: Target of secondary chord.
+        """
+
         if self._target != None:
             return self._target
         else:
@@ -154,11 +254,44 @@ class RomanChord:
     
     @property
     def quality(self) -> Quality:
+        """
+        Get the quality of the chord.
+
+        Returns:
+            Quality: Quality of the chord.
+        """
+
         return self._quality
     
     @quality.setter
     def quality(self, new_quality: Quality):
-        if not issubclass(type(new_quality), Quality):
-            raise TypeError(f"must be quality, not {type(new_quality).__name__}")
+        """
+        Set the quality of the chord.
+
+        Args:
+            new_quality (Quality): Quality to set the chord to.
+        """
 
         self._quality = new_quality
+    
+    @property
+    def inversion(self) -> int:
+        """
+        Get the inversion of the chord.
+
+        Returns:
+            int: Inversion of the chord.
+        """
+
+        return self._inversion
+    
+    @inversion.setter
+    def inversion(self, new_inversion):
+        """
+        Set the inversion of the chord.
+
+        Args:
+            new_inversion (int): Inversion to set the chord to.
+        """
+
+        self._inversion = new_inversion

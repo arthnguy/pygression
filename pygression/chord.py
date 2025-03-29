@@ -8,12 +8,15 @@ from .quality.triad import Major, Minor
 from .modifier.base import Modifier
 
 class Chord:
-    def __init__(self, root: Note, quality: Quality=Major()):
-        if type(root) != Note:
-            raise TypeError(f"root must be note, not {type(root).__name__}")
-        if not issubclass(type(quality), Quality):
-            raise TypeError(f"quality must be quality, not {type(quality).__name__}")
+    """
+    Class that represents a chord in music.
 
+    Args:
+        root (Note): Root of the chord.
+        quality (Quality): Quality of the chord.
+    """
+
+    def __init__(self, root: Note, quality: Quality=Major()):
         self._root = root
         self._quality = quality
         self._inversion = 0
@@ -28,12 +31,16 @@ class Chord:
     def __str__(self) -> str:
         return str(self._root) + str(self._quality) + self._quality.figured_bass(0) + "".join(str(modifier) for modifier in self._modifiers) + ("/" + str(self._notes[0]) if self._inversion != 0 else "")
     
-    # Add modifier
     def attach(self, new_modifier: Modifier) -> "Chord":
-        if not issubclass(type(new_modifier), Modifier):
-            raise TypeError(f"must be modifier, not {type(new_modifier).__name__}")
-        if not new_modifier._compatible_with_quality(self._quality):
-            raise TypeError(f"cannot apply {type(new_modifier).__name__} to {type(self._quality).__name__}")
+        """
+        Adds a modifier to the chord.
+
+        Args:
+            new_modifier: Modifier to add to the chord.
+
+        Returns: 
+            Chord: The chord with the modifier added.
+        """
 
         if new_modifier not in self._modifiers:
             self._modifiers.append(new_modifier)
@@ -42,16 +49,30 @@ class Chord:
 
         return self
 
-    # Remove modifier
     def detach(self, modifier: Modifier) -> "Chord":
+        """
+        Removes a modifier from the chord.
+
+        Args:
+            modifier: Modifier to remove from the chord.
+
+        Returns:
+            Chord: The chord with the modifier removed.
+        """
+
         self._modifiers.remove(modifier)
         return self
 
     def with_mod(self, new_modifier: Modifier) -> "Chord":
-        if not issubclass(type(new_modifier), Modifier):
-            raise TypeError(f"must be modifier, not {type(new_modifier).__name__}")
-        if not new_modifier._compatible_with_quality(self._quality):
-            raise TypeError(f"cannot apply {type(new_modifier).__name__} to {type(self._quality).__name__}")
+        """
+        Returns a chord with the supplied modifier.
+
+        Args:
+            new_modifier: Modifier to add to the chord.
+
+        Returns: 
+            Chord: A new chord with the modifier added.
+        """
         
         new_chord = deepcopy(self)
         if new_modifier not in new_chord._modifiers:
@@ -62,76 +83,134 @@ class Chord:
         return new_chord            
 
     def without_mod(self, modifier: Modifier) -> "Chord":
+        """
+        Returns a chord without the supplied modifier.
+
+        Args:
+            modifier: Modifier to remove from the chord.
+
+        Returns: 
+            Chord: The chord with the modifier removed.
+        """
+
         new_chord = deepcopy(self)
         new_chord._modifiers.remove(modifier)
 
         return new_chord
 
-    # Inversions
     def __irshift__(self, inversions: int) -> "Chord":
-        if type(inversions) != int:
-            raise TypeError(f"must be int, not {type(inversions).__name__}")
+        """
+        Inverts a chord up by a certain amount of inversions
 
-        highest_inversion = 3
-        if len(self._modifiers) > 0 and str(self._modifiers[-1]) in ("no3", "no5"):
-            highest_inversion -= 1
-        if len(self._modifiers) > 1 and str(self._modifiers[-2]) in ("no3", "no5"):
-            highest_inversion -= 1
+        Args:
+            inversions (int): Number of times to invert up.
+        
+        Returns: 
+            Chord: The chord inverted.
+        """
 
         self._inversion += inversions
-        self._inversion %= highest_inversion
-
         self._calculate_notes()
         
         return self
 
     def __rshift__(self, inversions: int) -> "Chord":
-        if type(inversions) != int:
-            raise TypeError(f"must be int, not {type(inversions).__name__}")
+        """
+        Returns a chord inverted up a specified number of times.
+
+        Args:
+            inversions (int): Number of times to invert up.
+        
+        Returns: 
+            Chord: A new inverted chord.
+        """
 
         new_chord = deepcopy(self)
-        
-        highest_inversion = 3
-        if len(new_chord._modifiers) > 0 and str(new_chord._modifiers[-1]) in ("no3", "no5"):
-            highest_inversion -= 1
-        if len(new_chord._modifiers) > 1 and str(new_chord._modifiers[-2]) in ("no3", "no5"):
-            highest_inversion -= 1
-
         new_chord._inversion += inversions
-        new_chord._inversion %= highest_inversion
-        
         new_chord._calculate_notes()
         
         return new_chord
     
     def __ilshift__(self, inversions: int) -> "Chord":
+        """
+        Inverts a chord down by a certain amount of inversions
+
+        Args:
+            inversions (int): Number of times to invert down.
+        
+        Returns:
+            Chord: The chord inverted.
+        """
+
         return self.__irshift__(-inversions)
 
     def __lshift__(self, inversions: int) -> "Chord":
+        """
+        Returns a chord inverted down a specified number of times.
+
+        Args:
+            inversions (int): Number of times to invert up.
+        
+        Returns:
+            Chord: A new inverted chord.
+        """
+
         return self.__rshift__(-inversions)
     
     # Get nth note of chord
     def __getitem__(self, index: int) -> Note:
+        """
+        Get note of the chord at the specified index.
+
+        Args:
+            index (int): Index of note in chord.
+        
+        Returns: 
+            Note: The note at the index.
+        """
+
         return self._notes[index]
     
-    # Same or enharmonically equivalent
     def __eq__(self, other: "Chord") -> bool:
-        if type(other) != Chord:
-            raise TypeError(f"must be chord, not {type(other).__name__}")
+        """
+        Checks for enharmonic equivalence.
+
+        Args:
+            other (Chord): Chord to compare the current chord to.
+        
+        Returns:
+            bool: Whether the two chords are enharmonically equivalent.
+        """
 
         return self._notes == other._notes
     
     def __ne__(self, other: "Chord") -> bool:
-        if type(other) != Chord:
-            raise TypeError(f"must be chord, not {type(other).__name__}")
+        """
+        Checks for enharmonic inequivalence.
+
+        Args:
+            other (Chord): Chord to compare the current chord to.
+        
+        Returns:
+            bool: Whether the two chords are enharmonically inequivalent.
+        """
 
         return self._notes != other._notes
-    
-    def __getitem__(self, index: int) -> Note:
-        return self._notes[index]
 
-    # Slash chords, explicit inversion
     def __idiv__(self, note: Note) -> "Chord":
+        """
+        Turns the chord into a slash chord. Does not support adding a nonexistent note for the bass.
+
+        Args:
+            note (Note): Note that will be the bass.
+        
+        Returns: 
+            Chord: The chord with the new bass.
+
+        Raises:
+            ValueError: If "note" doesn't exist in the chord.
+        """
+
         for _ in range(len(self._notes)):
             if self[0].letter == note.letter and self[0].accidental == note.accidental:
                 return self
@@ -141,6 +220,19 @@ class Chord:
         raise ValueError("note doesn't exist in chord")
     
     def __truediv__(self, note: Note) -> "Chord":
+        """
+        Returns a chord with the specified bass. Does not support adding a nonexistent note for the bass.
+
+        Args:
+            note (Note): Note that will be the bass.
+        
+        Returns:
+            Chord: A chord with the new bass.
+
+        Raises:
+            ValueError: If "note" doesn't exist in the chord.
+        """
+        
         test = deepcopy(self)
 
         for _ in range(len(test._notes)):
@@ -153,14 +245,9 @@ class Chord:
 
     # Calculate the notes for the chord from the root, quality, and modifiers
     def _calculate_notes(self):
-        '''
-        Steps:
-        1. Build core chord
-        2. Apply modifiers
-        3. Apply inversion
-        '''
         self._notes = self._quality.build_core(self._root)
 
+        # Apply modifiers
         for i in range(len(self._modifiers)):
             self._notes = self._modifiers[i].modify(self._root, self._notes)
         
@@ -168,47 +255,110 @@ class Chord:
         if (type(self._quality) == Minor and len(self._notes) >= 2 and nth_letter_from(self._notes[0].letter, 2) != self._notes[1].letter) or (len(self._notes) == 1):
             self._quality = Major()
 
+        # Invert
         self._inversion %= len(self._notes)
         for i in range(self._inversion):
             self._notes.append(self._notes.pop(0))
     
     @property
     def root(self) -> Note:
+        """
+        Get the root of the chord.
+
+        Returns:
+            Note: Root of chord.
+        """
+
         return self._root
     
     @root.setter
     def root(self, new_root: Note):
-        if type(new_root) != Note:
-            raise TypeError(f"must be note, not {type(new_root).__name__}")
+        """
+        Set the root of the chord.
+
+        Args:
+            new_root (Note): Note to set the root to.
+        """
 
         self._root = new_root
         self._calculate_notes()
     
     @property
     def quality(self) -> Quality:
+        """
+        Get the quality of the chord.
+
+        Returns: 
+            Quality: Quality of the chord.
+        """
+
         return self._quality
     
     @quality.setter
     def quality(self, new_quality: Quality):
-        if not issubclass(type(new_quality), Quality):
-            raise TypeError(f"must be quality, not {type(new_quality).__name__}")
+        """
+        Set the quality of the chord.
+
+        Args:
+            new_quality (Quality): Quality to set the chord to.
+        """
 
         self._quality = new_quality
         self._calculate_notes()
     
     @property
     def inversion(self) -> int:
+        """
+        Get the inversion of the chord.
+
+        Returns:
+            int: Inversion of the chord.
+        """
+
         return self._inversion
+    
+    @inversion.setter
+    def inversion(self, new_inversion):
+        """
+        Set the inversion of the chord.
+
+        Args:
+            new_inversion (int): Inversion to set the chord to.
+        """
+
+        self._inversion = new_inversion
+        self._calculate_notes()
     
     @property
     def notes(self) -> str:
+        """
+        Get the notes of the chord.
+
+        Returns: 
+            str: Notes of the chord.
+        """
+
         return '-'.join(map(str, self._notes))
     
     @property
     def modifiers(self) -> List[Modifier]:
+        """
+        Get the modifiers on the chord.
+
+        Returns:
+            List[str]: Modifiers on the chord.
+        """
+
         return self._modifiers
     
     @modifiers.setter
     def modifiers(self, new_modifiers):
+        """
+        Set the modifiers on the chord.
+
+        Returns:
+            List[str]: Modifiers on the chord.
+        """
+
         self._modifiers = new_modifiers
         self._calculate_notes()

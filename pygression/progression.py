@@ -9,14 +9,16 @@ from .consts import Accidental, Mode
 from .quality.triad import *
 
 class Progression:
+    """
+    Class that represents chord progressions.
+
+    Args:
+        items (List): List of chords represented as either Roman chords or degrees.
+        mode (Mode): Mode that the degrees are based off of.
+        relative_to (Mode): Mode that the progression is read with respect to.
+    """
+
     def __init__(self, items=None, mode: Mode=Mode.ION, relative_to: Mode=Mode.ION):
-        if type(mode) != Mode:
-            raise TypeError(f"mode must be mode, not {type(mode).__name__}")
-        if type(relative_to) != Mode:
-            raise TypeError(f"relative_to must be mode, not {type(relative_to).__name__}")
-        if items != None and type(items) != list:
-            raise TypeError(f"items must be list, not {type(items).__name__}")
-            
         self._mode = mode
         self._relative_to = relative_to
         self._chords = []
@@ -24,13 +26,11 @@ class Progression:
         for item in items:
             self.append(item)
 
-    # Get notes for scale in the specified mode
     def _calculate_scale(self, mode: Mode) -> List[Note]:
         scale = []
         for i in range(7):
             scale.append(self._key >> i)
 
-        # Apply accidentals
         for i in range(7):
             semitones = (mode.value[i] + int(self._key) - int(scale[i])) % 12
             if semitones > 2:
@@ -47,47 +47,119 @@ class Progression:
         return str(self._chords)
 
     def __add__(self, prog: "Progression") -> "Progression":
+        """
+        Returns a progression with chords from one progression added to the end of the current progression.
+
+        Args:
+            prog (Progression): Progression to add chords from.
+        
+        Returns:
+            Progression: A new progression with chords appended to it.
+        """
+
         new_prog = deepcopy(self)
         new_prog._chords += prog._chords
 
         return new_prog
     
     def __iadd__(self, prog: "Progression") -> "Progression":
+        """
+        Adds chords from one progression to the end of the current progression.
+
+        Args:
+            prog (Progression): Progression to add chords from.
+        
+        Returns:
+            Progression: The progression with chords appended to it.
+        """
+
+        if type(prog) != Progression:
+            raise TypeError(f"prog must be Progression, not {type(prog).__name__}")
+
         self._chords += prog._chords
         return self
 
     def __getitem__(self, index: int) -> RomanChord:
-        if index >= len(self._chords) or index < -len(self._chords):
-            raise IndexError("progression index out of range")
+        """
+        Get Roman chord in the progression at a specific index.
+
+        Args:
+            index (int): Index of Roman chord in progression.
+        
+        Returns:
+            RomanChord: The Roman chord at the index.
+
+        Raises:
+            IndexError: If "index" is not in the range of the list of notes.
+        """
 
         return self._chords[index]
     
-    def __setitem__(self, index: int, new_chord: RomanChord):
-        if index >= len(self._chords) or index < -len(self._chords):
-            raise IndexError("progression index out of range")
+    def __setitem__(self, index: int, new_item):
+        """
+        Set Roman chord in the progression at a specific index.
+
+        Args:
+            index (int): Index of Roman chord in progression.
+            new_item (int, RomanChord): Roman chord to set to.
+
+        Raises:
+            IndexError: If "index" is not in the range of the list of notes.
+            ValueError: If "new_item" is a degree and is not between 1 and 7.
+        """
+
+        new_chord = None
+
+        if type(new_item) == int:
+            self._append_degree(new_item)
+            new_chord = self._chords.pop()
+        elif type(new_item) == RomanChord:
+            new_chord = new_item
 
         self._chords[index] = new_chord
     
     @property
     def mode(self) -> Mode:
+        """
+        Get mode of progresion.
+
+        Returns:
+            Mode: Mode of the progression.
+        """
+
         return self._mode
     
     # Mode change
     @mode.setter
     def mode(self, new_mode: Mode):
-        if type(new_mode) != Mode:
-            raise TypeError(f"must be mode, not {type(new_mode).__name__}")
+        """
+        Set mode of progression.
+
+        Args:
+            new_mode (Mode): Mode to set the progression to.
+        """
 
         self._mode = new_mode
     
     @property
     def relative_to(self) -> Mode:
+        """
+        Get mode that progresion is read with respect to.
+
+        Returns:
+            Mode: Mode the progression is read with respect to.
+        """
+
         return self._relative_to
     
     @relative_to.setter
     def relative_to(self, new_mode: Mode):
-        if type(new_mode) != Mode:
-            raise TypeError(f"must be mode, not {type(new_mode).__name__}")
+        """
+        Set mode that progression is read with respect to.
+
+        Args:
+            new_mode (Mode): Mode to set the progression to.
+        """
 
         for chord in self._chords:
             chord.roman += new_mode - self._relative_to
@@ -98,7 +170,14 @@ class Progression:
         self._relative_to = new_mode
     
     @property
-    def chords(self) -> List[Chord]:
+    def chords(self) -> List[RomanChord]:
+        """
+        Get list of Roman chords in progression.
+
+        Returns:
+            List[RomanChord]: Roman chords in progression.
+        """
+
         return self._chords
     
     def _append_degree(self, degree: int):
@@ -154,29 +233,72 @@ class Progression:
         
         self._chords.insert(index, RomanChord(Roman(degree, accidental=Accidental(self._mode.value[degree - 1] - self._relative_to.value[degree - 1])), quality=quality))
     
-    def _insert_chord(self, chord: Chord, index: int):
+    def _insert_chord(self, chord: RomanChord, index: int):
         self._chords.insert(index, chord)
 
     def append(self, item):
+        """
+        Appends a Roman chord to the progression.
+
+        Args:
+            item (int, RomanChord): Roman chord to append to the progression.
+        
+        Raises:
+            ValueError: If "new_item" is a degree and is not between 1 and 7.
+        """
+
         if type(item) == int:
             self._append_degree(item)
         elif type(item) == RomanChord:
             self._append_chord(item)
         else:
-            raise TypeError(f"item must be int or Chord, not {type(item).__name__}")
+            raise TypeError(f"item must be integer or RomanChord, not {type(item).__name__}")
     
     def insert(self, index: int, item):
+        """
+        Inserts a Roman chord into the progression.
+
+        Args:
+            index (int): Index to insert at.
+            item (int, RomanChord): Roman chord to append to the progression.
+        
+        Raises:
+            IndexError: If "index" is not in the range of the list of Roman chords.
+            ValueError: If "new_item" is a degree and is not between 1 and 7.
+        """
+
         if type(item) == int:
             self._insert_degree(item, index)
         elif type(item) == RomanChord:
             self._insert_chord(item, index)
-        else:
-            raise TypeError(f"item must be int or Chord, not {type(item).__name__}")
     
-    def pop(self, index: int=-1) -> Chord:
+    def pop(self, index: int=-1) -> RomanChord:
+        """
+        Removes and returns the Roman chord in the progression at the specified index.
+
+        Args:
+            index (int): Index to pop the Roman chord from.
+
+        Returns:
+            RomanChord: Roman chord at the index.
+        """
+
         return self._chords.pop(index)
     
     def chords_in(self, key: Note) -> List[Chord]:
+        """
+        Get the chords of the chord progression in a specific key.
+
+        Args:
+            key (Note): Key of chord progression.
+
+        Returns:
+            List[Chord]: List of chords in a specific key.
+
+        Raises:
+            ValueError: If "key" has double accidentals.
+        """
+
         if key.accidental.value < -1 or key.accidental.value > 1:
             raise ValueError("cannot have double accidentals as key")
 

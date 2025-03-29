@@ -1,3 +1,4 @@
+from typing import List
 from .base import Modifier
 from ..note import Note
 from ..utils import nth_letter_from
@@ -18,11 +19,17 @@ class No3(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return True
     
-    def modify(self, root: Note, notes: [Note]) -> [Note]:
-        modified_notes = notes.copy()
-        modified_notes.pop(1)
+    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
+        new_notes = notes.copy()
+        
+        third = nth_letter_from(root.letter, 2)
 
-        return modified_notes
+        for i in range(len(notes)):
+            if new_notes[i].letter == third:
+                new_notes.pop(i)
+                break
+
+        return new_notes
 
 class No5(Modifier):
     def __str__(self):
@@ -40,8 +47,14 @@ class No5(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return True
 
-    def modify(self, root: Note, notes: [Note]) -> [Note]:
-        modified_notes = notes.copy()
-        modified_notes.pop(2)
+    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
+        new_notes = notes.copy()
+        
+        fifth = nth_letter_from(root.letter, 4)
 
-        return modified_notes
+        for i in range(len(notes)):
+            if new_notes[i].letter == fifth:
+                new_notes.pop(i)
+                break
+
+        return new_notes

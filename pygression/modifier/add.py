@@ -1,3 +1,4 @@
+from typing import List
 from .base import Modifier
 from ..note import Note
 from ..utils import Accidental, nth_letter_from
@@ -19,7 +20,7 @@ class Add9(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return type(quality) not in (Ninth, Eleventh, Thirteenth)
 
-    def modify(self, root: Note, notes: [Note]) -> [Note]:
+    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
 
         letter = nth_letter_from(root.letter, 8)
@@ -43,7 +44,7 @@ class AddFlat9(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return type(quality) not in (Ninth, Eleventh, Thirteenth)
 
-    def modify(self, root: Note, notes: [Note]) -> [Note]:
+    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
 
         letter = nth_letter_from(root.letter, 8)
@@ -67,7 +68,7 @@ class AddSharp9(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return type(quality) not in (Ninth, Eleventh, Thirteenth)
 
-    def modify(self, root: Note, notes: [Note]) -> [Note]:
+    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
 
         letter = nth_letter_from(root.letter, 8)
@@ -91,7 +92,7 @@ class Add11(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return type(quality) not in (Eleventh, Thirteenth)
     
-    def modify(self, root: Note, notes: [Note]) -> [Note]:
+    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
 
         letter = nth_letter_from(root.letter, 10)
@@ -115,7 +116,7 @@ class AddFlat11(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return type(quality) not in (Eleventh, Thirteenth)
 
-    def modify(self, root: Note, notes: [Note]) -> [Note]:
+    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
 
         letter = nth_letter_from(root.letter, 10)
@@ -139,7 +140,7 @@ class AddSharp11(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return type(quality) not in (Eleventh, Thirteenth)
 
-    def modify(self, root: Note, notes: [Note]) -> [Note]:
+    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
 
         letter = nth_letter_from(root.letter, 10)
@@ -163,7 +164,7 @@ class Add13(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return type(quality) != Thirteenth
 
-    def modify(self, root: Note, notes: [Note]) -> [Note]:
+    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
 
         letter = nth_letter_from(root.letter, 12)
@@ -187,7 +188,7 @@ class AddFlat13(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return type(quality) != Thirteenth
 
-    def modify(self, root: Note, notes: [Note]) -> [Note]:
+    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
 
         letter = nth_letter_from(root.letter, 12)
@@ -211,7 +212,7 @@ class AddSharp13(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return type(quality) != Thirteenth
 
-    def modify(self, root: Note, notes: [Note]) -> [Note]:
+    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
 
         letter = nth_letter_from(root.letter, 12)

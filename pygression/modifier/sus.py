@@ -1,3 +1,4 @@
+from typing import List
 from .base import Modifier
 from ..note import Note
 from ..utils import nth_letter_from, Accidental
@@ -18,7 +19,7 @@ class Sus2(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return True
 
-    def modify(self, root: Note, notes: [Note]) -> [Note]:
+    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
         new_notes[1] = Note.note_relative_to(nth_letter_from(root.letter, 1), root, 2)
         
@@ -40,7 +41,7 @@ class Sus4(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return True
     
-    def modify(self, root: Note, notes: [Note]) -> [Note]:
+    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
         new_notes[1] = Note.note_relative_to(nth_letter_from(root.letter, 3), root, 5)
 
