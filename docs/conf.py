@@ -11,6 +11,9 @@ import sys
 sys.path.insert(0, os.path.abspath('../'))
 
 
+master_doc = "index"
+
+
 project = 'pygression'
 copyright = '2025, Arthur Nguyen'
 author = 'Arthur Nguyen'
