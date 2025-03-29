@@ -50,4 +50,4 @@ To get this progression in a specific key, use the `chords_in` method. This meth
 [Abm, Ebm, Fb, Dbm]
 ```
 
-More advanced features can be found in the documentation.
+More advanced features can be found in the documentation: https://pygression.readthedocs.io/en/latest/index.html.
