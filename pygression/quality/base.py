@@ -2,7 +2,6 @@
 from typing import List
 from abc import ABC, abstractmethod
 from ..note import Note
-from ..consts import Letter
 from ..utils import nth_letter_from
 
 class Quality(ABC):
@@ -13,17 +12,17 @@ class Quality(ABC):
     # Notes of the chord as integers
     @staticmethod
     @abstractmethod
-    def get_integers(self) -> List[int]:
+    def _get_integers(self) -> List[int]:
         pass
     
     # For Roman numeral analysis
     @abstractmethod
-    def figured_bass(self) -> str:
+    def _figured_bass(self) -> str:
         pass
 
-    def build_core(self, root: Note) -> List[Note]:
+    def _build_core(self, root: Note) -> List[Note]:
         notes = []
-        integers = self.get_integers()
+        integers = self._get_integers()
 
         for i in range(len(integers)):
             notes.append(Note.note_relative_to(nth_letter_from(root.letter, i * 2), root, integers[i]))

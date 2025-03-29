@@ -19,7 +19,7 @@ class No3(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return True
     
-    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
+    def _modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
         
         third = nth_letter_from(root.letter, 2)
@@ -47,7 +47,7 @@ class No5(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return True
 
-    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
+    def _modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
         
         fifth = nth_letter_from(root.letter, 4)

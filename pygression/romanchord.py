@@ -29,7 +29,7 @@ class RomanChord:
         if str(self._quality) != "m":
             s += str(self._quality)
 
-        return s + self._quality.figured_bass(self._inversion) + "".join(str(modifier) for modifier in self._modifiers) + ("/" + str(self._target) if self._target != None else "")
+        return s + self._quality._figured_bass(self._inversion) + "".join(str(modifier) for modifier in self._modifiers) + ("/" + str(self._target) if self._target != None else "")
 
     def __str__(self) -> str:
         s = str(self._roman)
@@ -39,7 +39,7 @@ class RomanChord:
         if str(self._quality) != "m":
             s += str(self._quality)
 
-        return s + self._quality.figured_bass(self._inversion) + "".join(str(modifier) for modifier in self._modifiers) + ("/" + str(self._target) if self._target != None else "")
+        return s + self._quality._figured_bass(self._inversion) + "".join(str(modifier) for modifier in self._modifiers) + ("/" + str(self._target) if self._target != None else "")
     
     def __idiv__(self, target: "RomanChord") -> "RomanChord":
         """
@@ -90,7 +90,7 @@ class RomanChord:
             RomanChord: The chord inverted.
         """
 
-        highest_inversion = len(self.quality.get_integers())
+        highest_inversion = len(self.quality._get_integers())
         if len(self._modifiers) > 0 and str(self._modifiers[-1]) in ("no3", "no5"):
             highest_inversion -= 1
         if len(self._modifiers) > 1 and str(self._modifiers[-2]) in ("no3", "no5"):
@@ -114,7 +114,7 @@ class RomanChord:
 
         new_chord = deepcopy(self)
         
-        highest_inversion = len(new_chord.quality.get_integers())
+        highest_inversion = len(new_chord.quality._get_integers())
         if len(new_chord._modifiers) > 0 and str(new_chord._modifiers[-1]) in ("no3", "no5"):
             highest_inversion -= 1
         if len(new_chord._modifiers) > 1 and str(new_chord._modifiers[-2]) in ("no3", "no5"):

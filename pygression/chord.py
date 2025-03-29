@@ -1,4 +1,3 @@
-# Comprised of a note, quality, and modifiers, they are the building blocks of progressions
 from typing import List
 from copy import deepcopy
 from .note import Note
@@ -26,10 +25,10 @@ class Chord:
         self._calculate_notes()
     
     def __repr__(self) -> str:
-        return str(self._root) + str(self._quality) + self._quality.figured_bass(0) + "".join(str(modifier) for modifier in self._modifiers) + ("/" + str(self._notes[0]) if self._inversion != 0 else "")
+        return str(self._root) + str(self._quality) + self._quality._figured_bass(0) + "".join(str(modifier) for modifier in self._modifiers) + ("/" + str(self._notes[0]) if self._inversion != 0 else "")
 
     def __str__(self) -> str:
-        return str(self._root) + str(self._quality) + self._quality.figured_bass(0) + "".join(str(modifier) for modifier in self._modifiers) + ("/" + str(self._notes[0]) if self._inversion != 0 else "")
+        return str(self._root) + str(self._quality) + self._quality._figured_bass(0) + "".join(str(modifier) for modifier in self._modifiers) + ("/" + str(self._notes[0]) if self._inversion != 0 else "")
     
     def attach(self, new_modifier: Modifier) -> "Chord":
         """
@@ -245,11 +244,11 @@ class Chord:
 
     # Calculate the notes for the chord from the root, quality, and modifiers
     def _calculate_notes(self):
-        self._notes = self._quality.build_core(self._root)
+        self._notes = self._quality._build_core(self._root)
 
         # Apply modifiers
         for i in range(len(self._modifiers)):
-            self._notes = self._modifiers[i].modify(self._root, self._notes)
+            self._notes = self._modifiers[i]._modify(self._root, self._notes)
         
         # Switch back to major if minor with a missing third or if only note (from no3no5 for some reason)
         if (type(self._quality) == Minor and len(self._notes) >= 2 and nth_letter_from(self._notes[0].letter, 2) != self._notes[1].letter) or (len(self._notes) == 1):

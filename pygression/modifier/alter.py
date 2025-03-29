@@ -19,7 +19,7 @@ class Flat5(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return quality.get_integers()[2] != 6
 
-    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
+    def _modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
         new_notes[2] = Note.note_relative_to(nth_letter_from(root.letter, 4), root, 6)
 
@@ -41,7 +41,7 @@ class Sharp5(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return quality.get_integers()[2] != 8
     
-    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
+    def _modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
         new_notes[2] = Note.note_relative_to(nth_letter_from(root.letter, 4), root, 8)
 
@@ -63,7 +63,7 @@ class Flat9(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return len(quality.get_integers()) != 3 and len(quality.get_integers()) != 5
 
-    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
+    def _modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
         new_notes.append(Note.note_relative_to(nth_letter_from(root.letter, 8), root, 13))
 
@@ -85,7 +85,7 @@ class Sharp9(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return len(quality.get_integers()) != 3 and len(quality.get_integers()) != 5
     
-    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
+    def _modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
         new_notes.append(Note.note_relative_to(nth_letter_from(root.letter, 8), root, 15))
 
@@ -107,7 +107,7 @@ class Flat11(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return len(quality.get_integers()) != 3 and len(quality.get_integers()) != 6
 
-    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
+    def _modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
 
         # Add ninth if some kind of ninth doesn't exist
@@ -134,7 +134,7 @@ class Sharp11(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return len(quality.get_integers()) != 3 and len(quality.get_integers()) != 6
 
-    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
+    def _modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
 
         # Add ninth if some kind of ninth doesn't exist
@@ -161,7 +161,7 @@ class Flat13(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return len(quality.get_integers()) != 3 and len(quality.get_integers()) != 7
     
-    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
+    def _modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
 
         # Add ninth if some kind of ninth doesn't exist
@@ -191,7 +191,7 @@ class Sharp13(Modifier):
     def _compatible_with_quality(self, quality) -> bool:
         return len(quality.get_integers()) != 3 and len(quality.get_integers()) != 7
 
-    def modify(self, root: Note, notes: List[Note]) -> List[Note]:
+    def _modify(self, root: Note, notes: List[Note]) -> List[Note]:
         new_notes = notes.copy()
 
         # Add ninth if some kind of ninth doesn't exist

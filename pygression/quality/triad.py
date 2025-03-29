@@ -1,7 +1,8 @@
+from typing import List
 from .base import Quality
 
 class Triad(Quality):
-    def figured_bass(self, inversion: int) -> str:
+    def _figured_bass(self, inversion: int) -> str:
         bass = ""
 
         if inversion == 1:
@@ -16,7 +17,7 @@ class Major(Triad):
         return ""
 
     @staticmethod
-    def get_integers() -> [int]:
+    def _get_integers() -> List[int]:
         return [0, 4, 7]
 
 class Minor(Triad):
@@ -24,7 +25,7 @@ class Minor(Triad):
         return "m"
 
     @staticmethod
-    def get_integers() -> [int]:
+    def _get_integers() -> List[int]:
         return [0, 3, 7]
 
 class Augmented(Triad):
@@ -32,7 +33,7 @@ class Augmented(Triad):
         return "+"
 
     @staticmethod
-    def get_integers() -> [int]:
+    def _get_integers() -> List[int]:
         return [0, 4, 8]
 
 class Diminished(Triad):
@@ -40,5 +41,5 @@ class Diminished(Triad):
         return "o"
 
     @staticmethod
-    def get_integers() -> [int]:
+    def _get_integers() -> List[int]:
         return [0, 3, 6]

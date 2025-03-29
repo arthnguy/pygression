@@ -194,13 +194,13 @@ class Progression:
 
         quality = None
 
-        if integers == Major.get_integers():
+        if integers == Major._get_integers():
             quality = Major()
-        elif integers == Minor.get_integers():
+        elif integers == Minor._get_integers():
             quality = Minor()
-        elif integers == Diminished.get_integers():
+        elif integers == Diminished._get_integers():
             quality = Diminished()
-        elif integers == Augmented.get_integers():
+        elif integers == Augmented._get_integers():
             quality = Augmented()
 
         self._chords.append(RomanChord(Roman(degree, accidental=Accidental(self._mode.value[degree - 1] - self._relative_to.value[degree - 1])), quality=quality))
@@ -222,13 +222,13 @@ class Progression:
 
         quality = None
 
-        if integers == Major.get_integers():
+        if integers == Major._get_integers():
             quality = Major()
-        elif integers == Minor.get_integers():
+        elif integers == Minor._get_integers():
             quality = Minor()
-        elif integers == Diminished.get_integers():
+        elif integers == Diminished._get_integers():
             quality = Diminished()
-        elif integers == Augmented.get_integers():
+        elif integers == Augmented._get_integers():
             quality = Augmented()
         
         self._chords.insert(index, RomanChord(Roman(degree, accidental=Accidental(self._mode.value[degree - 1] - self._relative_to.value[degree - 1])), quality=quality))

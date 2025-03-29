@@ -1,8 +1,8 @@
-# There are theoretically 64 sevenths that can be built, but this file includes the ones actually used
+from typing import List
 from .base import Quality
 
 class Seventh(Quality):
-    def figured_bass(self, inversion: int) -> str:
+    def _figured_bass(self, inversion: int) -> str:
         bass = "7"
 
         if inversion == 1:
@@ -19,7 +19,7 @@ class Major(Seventh):
         return "M"
 
     @staticmethod
-    def get_integers():
+    def _get_integers():
         return [0, 4, 7, 11]
 
 class Minor(Seventh):
@@ -27,7 +27,7 @@ class Minor(Seventh):
         return "m"
 
     @staticmethod
-    def get_integers():
+    def _get_integers():
         return [0, 3, 7, 10]
 
 class Dominant(Seventh):
@@ -35,7 +35,7 @@ class Dominant(Seventh):
         return ""
     
     @staticmethod
-    def get_integers():
+    def _get_integers():
         return [0, 4, 7, 10]
 
 class HalfDiminished(Seventh):
@@ -43,7 +43,7 @@ class HalfDiminished(Seventh):
         return "ø"
     
     @staticmethod
-    def get_integers():
+    def _get_integers():
         return [0, 3, 6, 10]
 
 class Diminished(Seventh):
@@ -51,7 +51,7 @@ class Diminished(Seventh):
         return "o"
 
     @staticmethod
-    def get_integers():
+    def _get_integers():
         return [0, 3, 6, 9]
 
 class MinorMajor(Seventh):
@@ -59,21 +59,13 @@ class MinorMajor(Seventh):
         return "mM"
     
     @staticmethod
-    def get_integers():
+    def _get_integers():
         return [0, 3, 7, 11]
-
-class AugmentedMajor(Seventh):
-    def __str__(self):
-        return "+M"
-    
-    @staticmethod
-    def get_integers():
-        return [0, 4, 8, 11]
 
 class Augmented(Seventh):
     def __str__(self):
         return "+"
     
     @staticmethod
-    def get_integers():
-        return [0, 4, 8, 11]
+    def _get_integers():
+        return [0, 4, 8, 10]

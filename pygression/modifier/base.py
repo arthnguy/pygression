@@ -1,3 +1,4 @@
+from typing import List
 from abc import ABC, abstractmethod
 from ..note import Note
 from ..quality import *
@@ -30,5 +31,5 @@ class Modifier(ABC):
         pass
 
     @abstractmethod
-    def modify(self, root: Note, notes: [Note]) -> [Note]:
+    def _modify(self, root: Note, notes: List[Note]) -> List[Note]:
         pass
